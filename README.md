@@ -10,9 +10,10 @@ For the sake of the demo we will be creating a kubernetes cluster which we will 
 Steps
 ------
 
-1. create a k8s cluster called log-dem
+1. create a k8s cluster called log-demo
 
-        gcloud container clusters create log-demo-cluster --zone us-central1-a
+        zone=us-west1
+        gcloud container clusters create log-demo-cluster --zone $zone
 
 2. create a pubsub topic where we will send our cluster logs
 
@@ -36,7 +37,7 @@ Here, we are simply printing back the filtered log but it's up to you to process
                 payload = base64.b64decode(data['data']).decode('utf-8')
             else:
                 payload = 'EMPTY'
-            print('I am a log entry, do somehting with me: {}!'.format(name))
+            print('I am a log entry, do somehting with me: {}!'.format(payload))
         EOF
 
 4. deploy the function while specifying our previously created topic as the trigger
@@ -44,9 +45,9 @@ Here, we are simply printing back the filtered log but it's up to you to process
        gcloud functions deploy hello_pubsub --source `pwd` --runtime python37 --trigger-topic log-demo-cluster-errors
 
 5. create a pubsub log export sink while filtering logs specific to our gke cluster which has severity `warning` and above:
-
+`NOTE`: change PROJECT_ID to your project id
         gcloud beta logging sinks create pub-sub-sink \
-            pubsub.googleapis.com/projects/rad-tests/topics/log-demo-cluster-errors \
+            pubsub.googleapis.com/projects/[PROJECT_ID]/topics/log-demo-cluster-errors \
             --log-filter='resource.type="container" AND resource.labels.cluster_name="log-demo-cluster" AND severity>=WARNING'
 
 6. get the pubsub sink writer identity service account
