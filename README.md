@@ -21,7 +21,7 @@ Steps
 
 3. create a function to process the pubsub messages(logs)
 
-Here, we are simply printing back the filtered log but it's up to you to process the log as you wish and perhaps store it later in a storage service like cloud BigTable, BigQuery, GCS. you can write your function in any of the following: python, nodejs, GO.
+Here, we are simply printing back the filtered log but it's up to you to process the log as you wish and perhaps store it later in a storage service like cloud BigTable, BigQuery, GCS. you can write your function in any of the following programming language: python, nodejs, GO.
 
         cat<< EOF > main.py
         def hello_pubsub(data, context):
@@ -56,7 +56,8 @@ Here, we are simply printing back the filtered log but it's up to you to process
         sink_sa=$(gcloud beta logging sinks describe pub-sub-sink --format="(writerIdentity)" | awk '{print $2}')
 
 7. Grant role of cloud pub sub publisher to the service account
-gcloud projects add-iam-policy-binding rad-tests --member=$sink_sa --role=roles/pubsub.publisher
+
+        gcloud projects add-iam-policy-binding rad-tests --member=$sink_sa --role=roles/pubsub.publisher
 
 8. Create some errors withing the cluster (deploy many replicas)
 
