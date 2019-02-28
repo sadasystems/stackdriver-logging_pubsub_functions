@@ -45,7 +45,8 @@ Here, we are simply printing back the filtered log but it's up to you to process
        gcloud functions deploy hello_pubsub --source `pwd` --runtime python37 --trigger-topic log-demo-cluster-errors
 
 5. create a pubsub log export sink while filtering logs specific to our gke cluster which has severity `warning` and above:
-`NOTE`: change PROJECT_ID to your project id
+`NOTE`: change `PROJECT_ID` to your project id
+
         gcloud beta logging sinks create pub-sub-sink \
             pubsub.googleapis.com/projects/[PROJECT_ID]/topics/log-demo-cluster-errors \
             --log-filter='resource.type="container" AND resource.labels.cluster_name="log-demo-cluster" AND severity>=WARNING'
